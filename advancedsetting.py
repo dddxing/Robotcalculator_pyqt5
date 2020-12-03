@@ -125,7 +125,8 @@ class Ui_Dialog_advancedSettings(object):
         self.retranslateUi(Dialog)
         
         self.buttonBox.accepted.connect(Dialog.accept)
-        self.buttonBox.clicked.connect(self.updateSettings)
+        self.buttonBox.accepted.connect(self.updateSettings)
+        # self.buttonBox.clicked.connect(self.updateSettings)
         self.buttonBox.rejected.connect(Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
         # self.buttonBox.accepted.connect(Ui_Dialog_advancedSettings.readSettings(self.lineEdit_numHours.text(), self.lineEdit_robotSpeed.text(), self.lineEdit_numStopSign.text(), self.lineEdit_planningTime.text(), self.lineEdit_trafficFactor.text(), self.lineEdit_numShift.text(), self.lineEdit_chargingFactor.text(), self.lineEdit_dockTime.text()))
