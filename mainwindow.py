@@ -15,13 +15,13 @@ from requiredFieldsWarning import Ui_requiredFieldsWarning
 from PyQt5 import QtCore, QtGui, QtWidgets
 # from PyQt5.QtWidgets import QMessageBox
 import sqlite3
-import panda as pd
 
 
-class Ui_MainWindow(object):
+class Ui_MainWindow():
 
     def calculation(self):        
-        pass
+        print(Ui_Dialog_advancedSettings.lineEdit_robotSpeed)
+        
 
     def openSettingWindow(self):
         self.window = QtWidgets.QDialog()
@@ -35,18 +35,21 @@ class Ui_MainWindow(object):
         self.ui.setupUi(self.window)
         self.window.show()
 
+    def openRequiredFieldsWarningWindow(self):
+        self.window = QtWidgets.QDialog()
+        self.ui = Ui_requiredFieldsWarning()
+        self.ui.setupUi(self.window)
+        self.window.show()
+
     def clear_text(self):
         self.lineEdit_from.setText("")
         self.lineEdit_to.setText("")
         self.lineEdit_dailytarget.setText("")
         self.lineEdit_distance.setText("")
 
-    def show_popup(self):
-        pass
-
     def addTrip(self, data):
         if self.lineEdit_from.text() == '' or self.lineEdit_to.text() == '' or self.lineEdit_dailytarget.text() == '' or self.lineEdit_distance.text() == '':
-            self.show_popup()
+            self.openRequiredFieldsWarningWindow()
             return
         rows = self.tableWidget_database.rowCount()
         self.tableWidget_database.setRowCount(rows+1)
@@ -186,6 +189,7 @@ class Ui_MainWindow(object):
         self.pushButton_clear.clicked.connect(self.clear_text)
         self.pushButton_addtrip.clicked.connect(self.addTrip)
         self.pushButton_removetrip.clicked.connect(self.removeTrip)
+        self.pushButton_calculate.clicked.connect(self.calculation)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -228,3 +232,5 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
+
+    

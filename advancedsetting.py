@@ -12,6 +12,33 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Ui_Dialog_advancedSettings(object):
+
+    lineEdit_numHours = 8
+    lineEdit_robotSpeed = 0.8
+    lineEdit_numStopSign = 0
+    lineEdit_planningTime = 15
+    lineEdit_trafficFactor = 0.8
+    lineEdit_numShift = 3
+    lineEdit_chargingFactor = 0.95
+    lineEdit_dockTime = 60
+
+    @classmethod
+    def readSettings(cls,numHours, robotSpeed, numStopSign, planningTime, trafficFactor, numShift, chargingFactor, dockTime):
+        '''
+        This function reads the values from 'line_Edits' and stores them into class variables respectively
+        '''
+        cls.lineEdit_numHours = numHours
+        cls.lineEdit_robotSpeed = robotSpeed
+        cls.lineEdit_numStopSign = numStopSign
+        cls.lineEdit_planningTime = planningTime
+        cls.lineEdit_trafficFactor = trafficFactor
+        cls.lineEdit_numShift = numShift
+        cls.lineEdit_chargingFactor = chargingFactor
+        cls.lineEdit_dockTime = dockTime
+
+    def updateSettings(self):
+        Ui_Dialog_advancedSettings.readSettings(self.lineEdit_numHours.text(), self.lineEdit_robotSpeed.text(), self.lineEdit_numStopSign.text(), self.lineEdit_planningTime.text(), self.lineEdit_trafficFactor.text(), self.lineEdit_numShift.text(), self.lineEdit_chargingFactor.text(), self.lineEdit_dockTime.text())
+     
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(200, 400)
@@ -96,9 +123,15 @@ class Ui_Dialog_advancedSettings(object):
         self.gridLayout.addItem(spacerItem7, 7, 1, 1, 1)
 
         self.retranslateUi(Dialog)
+        
         self.buttonBox.accepted.connect(Dialog.accept)
+        self.buttonBox.clicked.connect(self.updateSettings)
         self.buttonBox.rejected.connect(Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
+        # self.buttonBox.accepted.connect(Ui_Dialog_advancedSettings.readSettings(self.lineEdit_numHours.text(), self.lineEdit_robotSpeed.text(), self.lineEdit_numStopSign.text(), self.lineEdit_planningTime.text(), self.lineEdit_trafficFactor.text(), self.lineEdit_numShift.text(), self.lineEdit_chargingFactor.text(), self.lineEdit_dockTime.text()))
+        
+        Ui_Dialog_advancedSettings.readSettings(self.lineEdit_numHours.text(), self.lineEdit_robotSpeed.text(), self.lineEdit_numStopSign.text(), self.lineEdit_planningTime.text(), self.lineEdit_trafficFactor.text(), self.lineEdit_numShift.text(), self.lineEdit_chargingFactor.text(), self.lineEdit_dockTime.text())
+        
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
@@ -107,20 +140,27 @@ class Ui_Dialog_advancedSettings(object):
         self.label_traffiFactor.setText(_translate("Dialog", "Traffic Factor"))
         self.label_dockingTime.setText(_translate("Dialog", "Docking Time (s)"))
         self.label_planningTime.setText(_translate("Dialog", "Path Planning Time (s)"))
-        self.lineEdit_numHours.setText(_translate("Dialog", "8"))
-        self.lineEdit_robotSpeed.setText(_translate("Dialog", "0.8"))
-        self.lineEdit_numStopSign.setText(_translate("Dialog", "0"))
-        self.lineEdit_planningTime.setText(_translate("Dialog", "15"))
+        self.lineEdit_numHours.setText(_translate("Dialog", str(Ui_Dialog_advancedSettings.lineEdit_numHours)))
+        self.lineEdit_robotSpeed.setText(_translate("Dialog", str(Ui_Dialog_advancedSettings.lineEdit_robotSpeed)))
+        self.lineEdit_numStopSign.setText(_translate("Dialog", str(Ui_Dialog_advancedSettings.lineEdit_numStopSign)))
+        self.lineEdit_planningTime.setText(_translate("Dialog", str(Ui_Dialog_advancedSettings.lineEdit_planningTime)))
         self.label_robotSpeed.setText(_translate("Dialog", "Robot Speed (m/s)"))
-        self.lineEdit_trafficFactor.setText(_translate("Dialog", "0.8"))
+        self.lineEdit_trafficFactor.setText(_translate("Dialog", str(Ui_Dialog_advancedSettings.lineEdit_robotSpeed)))
         self.label_numStopSign.setText(_translate("Dialog", "Number of Stop Sign"))
-        self.lineEdit_numShift.setText(_translate("Dialog", "3"))
+        self.lineEdit_numShift.setText(_translate("Dialog", str(Ui_Dialog_advancedSettings.lineEdit_numShift)))
         self.label_charingFactor.setText(_translate("Dialog", "Charging Factor"))
-        self.lineEdit_chargingFactor.setText(_translate("Dialog", "0.9"))
-        self.lineEdit_dockTime.setText(_translate("Dialog", "60"))
+        self.lineEdit_chargingFactor.setText(_translate("Dialog", str(Ui_Dialog_advancedSettings.lineEdit_chargingFactor)))
+        self.lineEdit_dockTime.setText(_translate("Dialog", str(Ui_Dialog_advancedSettings.lineEdit_dockTime)))
         self.label_numShift.setText(_translate("Dialog", "Shifts Per Day"))
-
-
+        # Ui_Dialog_advancedSettings.readSettings(self.lineEdit_numHours.text(), self.lineEdit_robotSpeed.text(), self.lineEdit_numStopSign.text(), self.lineEdit_planningTime.text(), self.lineEdit_trafficFactor.text(), self.lineEdit_numShift.text(), self.lineEdit_chargingFactor.text(), self.lineEdit_dockTime.text())
+#     lineEdit_numHours = 8
+#     lineEdit_robotSpeed = 0
+#     lineEdit_numStopSign = 0
+#     lineEdit_planningTime = 15
+#     lineEdit_trafficFactor = 0.8
+#     lineEdit_numShift = 3
+#     lineEdit_chargingFactor = 0.95
+#     lineEdit_dockTime = 60
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
