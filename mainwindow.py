@@ -12,17 +12,51 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from advancedsetting import Ui_Dialog_advancedSettings
 from creditwindow import Ui_Dialog_credit
 from requiredFieldsWarning import Ui_requiredFieldsWarning
-from PyQt5 import QtCore, QtGui, QtWidgets
-# from PyQt5.QtWidgets import QMessageBox
+# from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QMessageBox
 import sqlite3
 
 
 class Ui_MainWindow():
 
-    def calculation(self):        
-        print(Ui_Dialog_advancedSettings.lineEdit_robotSpeed)
-        
+    def calculation(self): 
+        '''
+        This function will do the heavy lifting - AMR Calculation
+        '''
+        NumberOfAMRsRequired = []
+        # loop through all the distance and daily target
+        for i in range(self.tableWidget_database.rowCount()):
+            # import variables
+            RobotSpeed_ms = float(Ui_Dialog_advancedSettings.lineEdit_robotSpeed)
+            Distance_m = float(self.tableWidget_database.item(i,3).text())
+            DropOffTime_s = float(Ui_Dialog_advancedSettings.lineEdit_dockTime)
+            PlanningTime_s = float(Ui_Dialog_advancedSettings.lineEdit_planningTime)
+            NumberOfCrossSection = float(Ui_Dialog_advancedSettings.lineEdit_numStopSign)
+            StopAndResumeTime_s = 10
+            TrafficFactor = float(Ui_Dialog_advancedSettings.lineEdit_trafficFactor)
+            ChargingFactor = float(Ui_Dialog_advancedSettings.lineEdit_chargingFactor)
+            numShift = float(Ui_Dialog_advancedSettings.lineEdit_numShift)
+            numHours = float(Ui_Dialog_advancedSettings.lineEdit_numHours)
+            productionRate = float(self.tableWidget_database.item(i, 2).text())/ (numHours * numShift) 
 
+            # calculate the cycle_time and total_time
+            CycleTime_min = (1 / productionRate * 60)
+            TotalTime_min = ((Distance_m / RobotSpeed_ms) * 2 + (DropOffTime_s + PlanningTime_s) * 2 + (NumberOfCrossSection * StopAndResumeTime_s)) / 60
+
+            NumberOfAMRRequired = round(TotalTime_min / (CycleTime_min * TrafficFactor * ChargingFactor), 2)
+            NumberOfAMRsRequired.append(NumberOfAMRRequired)
+        
+        result = sum(NumberOfAMRsRequired)
+        print(NumberOfAMRsRequired)
+        print(f'robot speed =  {RobotSpeed_ms}')
+        print(f'distance in m = {Distance_m}')
+        print(f'Number of AMR = {result}')
+    
+    # def checkType(self):
+    #     for i in range(self.tableWidget_database.rowCount()):
+    #         if self.tableWidget_database.item(i,0).text != 
+
+        
     def openSettingWindow(self):
         self.window = QtWidgets.QDialog()
         self.ui = Ui_Dialog_advancedSettings()
@@ -57,7 +91,7 @@ class Ui_MainWindow():
         self.tableWidget_database.setItem(rows, 1, QtWidgets.QTableWidgetItem(self.lineEdit_to.text()))
         self.tableWidget_database.setItem(rows, 2, QtWidgets.QTableWidgetItem(self.lineEdit_dailytarget.text()))
         self.tableWidget_database.setItem(rows, 3, QtWidgets.QTableWidgetItem(self.lineEdit_distance.text()))
-        print(rows)
+        # print(rows)
         self.clear_text()
 
     def removeTrip(self):
@@ -197,7 +231,7 @@ class Ui_MainWindow():
         self.label_from.setText(_translate("MainWindow", "From"))
         self.label_dailytarget.setText(_translate("MainWindow", "Daily Target (Piece)"))
         self.label_to.setText(_translate("MainWindow", "To"))
-        self.label_distance.setText(_translate("MainWindow", "One-Way Distance (ft)"))
+        self.label_distance.setText(_translate("MainWindow", "One-Way Distance (m)"))
         self.pushButton_addtrip.setText(_translate("MainWindow", "Add Trip"))
         self.pushButton_removetrip.setText(_translate("MainWindow", "Remove Trip"))
         self.pushButton_updatetrip.setText(_translate("MainWindow", "Update Trip"))
@@ -212,7 +246,7 @@ class Ui_MainWindow():
         item = self.tableWidget_database.horizontalHeaderItem(2)
         item.setText(_translate("MainWindow", "Daily Target (Piece)"))
         item = self.tableWidget_database.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", "Distance (ft)"))
+        item.setText(_translate("MainWindow", "Distance (m)"))
         self.tableWidget_database.setColumnWidth(0, 100)
         self.tableWidget_database.setColumnWidth(1, 100)
         self.tableWidget_database.setColumnWidth(2, 150)
