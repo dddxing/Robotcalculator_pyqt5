@@ -12,49 +12,65 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from advancedsetting import Ui_Dialog_advancedSettings
 from creditwindow import Ui_Dialog_credit
 from requiredFieldsWarning import Ui_requiredFieldsWarning
-# from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QMessageBox, QWidget, QDesktopWidget, QApplication
 import sqlite3
 
 
-class Ui_MainWindow():
+class Ui_MainWindow(QWidget):
+
+    def showResultDialog(self,num):
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Information)
+        msgBox.setText(f"Based on the information you provided and all the parameters, you will need {num} robots to fulfill the requirement.")
+        msgBox.setWindowTitle("Results")
+        msgBox.setStandardButtons(QMessageBox.Ok )
+        # msgBox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        # msgBox.buttonClicked.connect(msgButtonClick)
+
+        returnValue = msgBox.exec()
+        # if returnValue == QMessageBox.Ok:
+        #     print('OK clicked')
 
     def calculation(self): 
         '''
         This function will do the heavy lifting - AMR Calculation
         '''
         NumberOfAMRsRequired = []
-        # loop through all the distance and daily target
-        for i in range(self.tableWidget_database.rowCount()):
-            # import variables
-            RobotSpeed_ms = float(Ui_Dialog_advancedSettings.lineEdit_robotSpeed)
-            Distance_m = float(self.tableWidget_database.item(i,3).text())
-            DropOffTime_s = float(Ui_Dialog_advancedSettings.lineEdit_dockTime)
-            PlanningTime_s = float(Ui_Dialog_advancedSettings.lineEdit_planningTime)
-            NumberOfCrossSection = float(Ui_Dialog_advancedSettings.lineEdit_numStopSign)
-            StopAndResumeTime_s = 10
-            TrafficFactor = float(Ui_Dialog_advancedSettings.lineEdit_trafficFactor)
-            ChargingFactor = float(Ui_Dialog_advancedSettings.lineEdit_chargingFactor)
-            numShift = float(Ui_Dialog_advancedSettings.lineEdit_numShift)
-            numHours = float(Ui_Dialog_advancedSettings.lineEdit_numHours)
-            productionRate = float(self.tableWidget_database.item(i, 2).text())/ (numHours * numShift) 
+        try:
+            # loop through all the distance and daily target
+            for i in range(self.tableWidget_database.rowCount()):
+                # import variables
+                RobotSpeed_ms = float(Ui_Dialog_advancedSettings.lineEdit_robotSpeed)
+                Distance_m = float(self.tableWidget_database.item(i,3).text())
+                DropOffTime_s = float(Ui_Dialog_advancedSettings.lineEdit_dockTime)
+                PlanningTime_s = float(Ui_Dialog_advancedSettings.lineEdit_planningTime)
+                NumberOfCrossSection = float(Ui_Dialog_advancedSettings.lineEdit_numStopSign)
+                StopAndResumeTime_s = 10
+                TrafficFactor = float(Ui_Dialog_advancedSettings.lineEdit_trafficFactor)
+                ChargingFactor = float(Ui_Dialog_advancedSettings.lineEdit_chargingFactor)
+                numShift = float(Ui_Dialog_advancedSettings.lineEdit_numShift)
+                numHours = float(Ui_Dialog_advancedSettings.lineEdit_numHours)
+                productionRate = float(self.tableWidget_database.item(i, 2).text())/ (numHours * numShift) 
 
-            # calculate the cycle_time and total_time
-            CycleTime_min = (1 / productionRate * 60)
-            TotalTime_min = ((Distance_m / RobotSpeed_ms) * 2 + (DropOffTime_s + PlanningTime_s) * 2 + (NumberOfCrossSection * StopAndResumeTime_s)) / 60
+                # calculate the cycle_time and total_time
+                CycleTime_min = (1 / productionRate * 60)
+                TotalTime_min = ((Distance_m / RobotSpeed_ms) * 2 + (DropOffTime_s + PlanningTime_s) * 2 + (NumberOfCrossSection * StopAndResumeTime_s)) / 60
 
-            NumberOfAMRRequired = round(TotalTime_min / (CycleTime_min * TrafficFactor * ChargingFactor), 2)
-            NumberOfAMRsRequired.append(NumberOfAMRRequired)
-        
-        result = sum(NumberOfAMRsRequired)
-        print(NumberOfAMRsRequired)
-        print(f'robot speed =  {RobotSpeed_ms}')
-        print(f'distance in m = {Distance_m}')
-        print(f'Number of AMR = {result}')
-    
-    # def checkType(self):
-    #     for i in range(self.tableWidget_database.rowCount()):
-    #         if self.tableWidget_database.item(i,0).text != 
+                NumberOfAMRRequired = round(TotalTime_min / (CycleTime_min * TrafficFactor * ChargingFactor), 2)
+                NumberOfAMRsRequired.append(NumberOfAMRRequired)
+            result = sum(NumberOfAMRsRequired)
+            self.showResultDialog(result)
+        except ValueError:
+            self.inputTypeErrorDialog()
+
+
+    def inputTypeErrorDialog(self):
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Warning)
+        msgBox.setText("Please make sure the 'daily target' and 'distance' that you input are numerical")
+        msgBox.setWindowTitle("Input Error")
+        msgBox.setStandardButtons(QMessageBox.Ok )
+        returnValue = msgBox.exec()
 
         
     def openSettingWindow(self):
@@ -99,6 +115,7 @@ class Ui_MainWindow():
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
+        
         MainWindow.resize(800, 400)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -227,7 +244,8 @@ class Ui_MainWindow():
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "CoE AMR Calculator, beta"))
+        self.center()
         self.label_from.setText(_translate("MainWindow", "From"))
         self.label_dailytarget.setText(_translate("MainWindow", "Daily Target (Piece)"))
         self.label_to.setText(_translate("MainWindow", "To"))
@@ -256,6 +274,21 @@ class Ui_MainWindow():
         self.actionAbout.setText(_translate("MainWindow", "About"))
         self.menu_about.setText(_translate("MainWindow", "About"))
         self.menu_about.setWhatsThis(_translate("MainWindow", "Show credit window"))
+    
+    def center(self):
+        qr = self.frameGeometry()
+        cp = QDesktopWidget().availableGeometry().center()
+        qr.moveCenter(cp)
+        self.move(qr.center())
+
+    def location_on_the_screen(self):
+        ag = QDesktopWidget().availableGeometry()
+        sg = QDesktopWidget().screenGeometry()
+
+        widget = self.geometry()
+        x = ag.width() - widget.width()
+        y = 2 * ag.height() - sg.height() - widget.height()
+        self.move(x, y)
 
 
 if __name__ == "__main__":
@@ -266,5 +299,3 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
-
-    
