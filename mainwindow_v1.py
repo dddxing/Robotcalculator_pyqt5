@@ -10,7 +10,6 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys, csv
-from PyQt5 import QtCore, QtGui, QtWidgets
 from advancedsetting import Ui_Dialog_advancedSettings
 from creditwindow import Ui_Dialog_credit
 # from requiredFieldsWarning import Ui_requiredFieldsWarning
@@ -18,6 +17,7 @@ from PyQt5.QtWidgets import QMessageBox, QWidget, QDesktopWidget, QApplication
 import sqlite3
 
 class Ui_MainWindow(object):
+
 
     def saveFile(self):
         pass
@@ -65,11 +65,10 @@ class Ui_MainWindow(object):
 
                 NumberOfAMRRequired = round(TotalTime_min / (CycleTime_min * TrafficFactor * ChargingFactor), 2)
                 NumberOfAMRsRequired.append(NumberOfAMRRequired)
-            result = sum(NumberOfAMRsRequired)
+            result = round(sum(NumberOfAMRsRequired),2)
             self.showResultDialog(result)
         except ValueError:
             self.inputTypeErrorDialog()
-
 
     def inputTypeErrorDialog(self):
         msgBox = QMessageBox()
@@ -135,7 +134,6 @@ class Ui_MainWindow(object):
 
     def removeTrip(self):
         self.tableWidget_database.removeRow(self.tableWidget_database.currentRow())
-
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -261,7 +259,7 @@ class Ui_MainWindow(object):
         self.label.setAutoFillBackground(False)
         self.label.setText("")
         self.label.setTextFormat(QtCore.Qt.PlainText)
-        self.label.setPixmap(QtGui.QPixmap("/home/dddxing/Desktop/GUI/stanleylogo.png"))
+        self.label.setPixmap(QtGui.QPixmap("image/stanleylogo.png"))
         self.label.setScaledContents(True)
         self.label.setObjectName("label")
         self.gridLayout_2.addWidget(self.label, 1, 0, 1, 1)
@@ -276,7 +274,7 @@ class Ui_MainWindow(object):
         self.label_2.setAutoFillBackground(False)
         self.label_2.setText("")
         self.label_2.setTextFormat(QtCore.Qt.PlainText)
-        self.label_2.setPixmap(QtGui.QPixmap("/home/dddxing/Desktop/GUI/ManufactoryLogo.png"))
+        self.label_2.setPixmap(QtGui.QPixmap("image/ManufactoryLogo.png"))
         self.label_2.setScaledContents(True)
         self.label_2.setObjectName("label_2")
         self.gridLayout_2.addWidget(self.label_2, 1, 2, 1, 1)
@@ -286,22 +284,17 @@ class Ui_MainWindow(object):
         self.menuBar.setObjectName("menuBar")
         self.menuInfo = QtWidgets.QMenu(self.menuBar)
         self.menuInfo.setObjectName("menuInfo")
-        self.menuFile = QtWidgets.QMenu(self.menuBar)
-        # self.menuFile.setObjectName("menuFile")
         MainWindow.setMenuBar(self.menuBar)
         self.actionAbout = QtWidgets.QAction(MainWindow)
         self.actionAbout.setObjectName("actionAbout")
         self.menu_about = QtWidgets.QAction(MainWindow)
         self.menu_about.setObjectName("menu_about")
-        # self.actionOpen = QtWidgets.QAction(MainWindow)
-        # self.actionOpen.setObjectName("actionOpen")
-        # self.actionSave = QtWidgets.QAction(MainWindow)
-        # self.actionSave.setObjectName("actionSave")
+        self.actionOpen = QtWidgets.QAction(MainWindow)
+        self.actionOpen.setObjectName("actionOpen")
+        self.actionSave = QtWidgets.QAction(MainWindow)
+        self.actionSave.setObjectName("actionSave")
         self.menuInfo.addAction(self.menu_about)
-        # self.menuFile.addAction(self.actionOpen)
-        # self.menuFile.addAction(self.actionSave)
-        # self.menuBar.addAction(self.menuFile.menuAction())
-        # self.menuBar.addAction(self.menuInfo.menuAction())
+        self.menuBar.addAction(self.menuInfo.menuAction())
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -336,14 +329,13 @@ class Ui_MainWindow(object):
         self.pushButton_removetrip.setText(_translate("MainWindow", "Remove Trip"))
         self.pushButton_clear.setText(_translate("MainWindow", "Clear"))
         self.menuInfo.setTitle(_translate("MainWindow", "Info"))
-        # self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.actionAbout.setText(_translate("MainWindow", "About"))
         self.menu_about.setText(_translate("MainWindow", "About"))
         self.menu_about.setWhatsThis(_translate("MainWindow", "Show credit window"))
-        # self.actionOpen.setText(_translate("MainWindow", "Open"))
-        # self.actionOpen.setShortcut(_translate("MainWindow", "Ctrl+O"))
-        # self.actionSave.setText(_translate("MainWindow", "Save"))
-        # self.actionSave.setShortcut(_translate("MainWindow", "Ctrl+S"))
+        self.actionOpen.setText(_translate("MainWindow", "Open"))
+        self.actionOpen.setShortcut(_translate("MainWindow", "Ctrl+O"))
+        self.actionSave.setText(_translate("MainWindow", "Save"))
+        self.actionSave.setShortcut(_translate("MainWindow", "Ctrl+S"))
 
 
 if __name__ == "__main__":

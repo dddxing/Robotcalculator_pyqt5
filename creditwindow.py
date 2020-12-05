@@ -15,6 +15,8 @@ class Ui_Dialog_credit(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(206, 80)
+#         Dialog.setStyleSheet("color: rgb(255, 255, 255);\n"
+# "background-color: rgb(34,47,61);")
         self.gridLayout = QtWidgets.QGridLayout(Dialog)
         self.gridLayout.setObjectName("gridLayout")
         self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
