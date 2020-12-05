@@ -18,7 +18,7 @@ To use this application, you need to know:
 ![error_type](error_type.png)
 
 ## This is a demo that you can dial in more advanced parameters to suit your operation.
-
+![advanced_settings](settings.png)
 
 ## When you input valid data and hit `calculate`, the application will give you the result
 ![result](result.png)
