@@ -4,7 +4,7 @@ I created this GUI application and algorithms to calculate the number of Automom
 To use this application, you need to know:
 1. From where
 2. To where
-3. Daily Target (Pallet)
+3. Daily Target
 4. Distance (m)
 
 ## This is a demo
