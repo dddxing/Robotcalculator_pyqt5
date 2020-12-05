@@ -1,5 +1,11 @@
 # Robotcalculator_pyqt5
-This is a desktop application designed for analyzing number of mobile robots needed.
+I created this GUI application and algorithms to calculate the number of Automomous Mobile Robots required in a flexible manufacturing systems.
+
+To use this application, you need to know:
+1. From where
+2. To where
+3. Daily Target (Pallet)
+4. Distance (m)
 
 ## This is a demo
 ![demo](demo.png)
@@ -10,6 +16,9 @@ This is a desktop application designed for analyzing number of mobile robots nee
 
 ## This is a demo to show it handle input type error
 ![error_type](error_type.png)
+
+## This is a demo that you can dial in more advanced parameters to suit your operation.
+
 
 ## When you input valid data and hit `calculate`, the application will give you the result
 ![result](result.png)
