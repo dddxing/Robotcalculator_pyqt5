@@ -309,7 +309,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "CoEAMRCalculator"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "CoE AMR Calculator"))
         item = self.tableWidget_database.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "From"))
         item = self.tableWidget_database.horizontalHeaderItem(1)
