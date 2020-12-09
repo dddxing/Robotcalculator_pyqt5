@@ -9,7 +9,8 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from PyQt5.QtWidgets import QMessageBox
+import pyinputplus as pyip
 
 class Ui_Dialog_advancedSettings(object):
 
@@ -23,7 +24,7 @@ class Ui_Dialog_advancedSettings(object):
     lineEdit_dockTime = 60
 
     @classmethod
-    def readSettings(cls,numHours, robotSpeed, numStopSign, planningTime, trafficFactor, numShift, chargingFactor, dockTime):
+    def readSettings(cls, numHours, robotSpeed, numStopSign, planningTime, trafficFactor, numShift, chargingFactor, dockTime):
         '''
         This function reads the values from 'line_Edits' and stores them into class variables respectively
         '''
@@ -36,9 +37,41 @@ class Ui_Dialog_advancedSettings(object):
         cls.lineEdit_chargingFactor = chargingFactor
         cls.lineEdit_dockTime = dockTime
 
+    def inputTypeErrorDialog(self):
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Warning)
+        msgBox.setText("Please ensure all inputs are valid")
+        msgBox.setWindowTitle("Input Error")
+        msgBox.setStandardButtons(QMessageBox.Ok )
+        returnValue = msgBox.exec()
+
+    def inputValidation(self):
+        try:
+            float(self.lineEdit_numHours.text())
+            float(self.lineEdit_robotSpeed.text())
+            float(self.lineEdit_numStopSign.text())
+            float(self.lineEdit_planningTime.text())
+            float(self.lineEdit_trafficFactor.text())
+            float(self.lineEdit_numShift.text())
+            float(self.lineEdit_chargingFactor.text())
+            float(self.lineEdit_dockTime.text())
+            # print("True")
+            return True
+        except ValueError:
+            # print("False")
+            return False
+        
+    def inputInvalidHandle(self):
+        if self.inputValidation() == True:
+            self.updateSettings()
+            Dialog.close()
+        else:
+            self.inputTypeErrorDialog()
+
     def updateSettings(self):
-        Ui_Dialog_advancedSettings.readSettings(self.lineEdit_numHours.text(), self.lineEdit_robotSpeed.text(), self.lineEdit_numStopSign.text(), self.lineEdit_planningTime.text(), self.lineEdit_trafficFactor.text(), self.lineEdit_numShift.text(), self.lineEdit_chargingFactor.text(), self.lineEdit_dockTime.text())
-     
+        if self.inputValidation():
+            Ui_Dialog_advancedSettings.readSettings(self.lineEdit_numHours.text(), self.lineEdit_robotSpeed.text(), self.lineEdit_numStopSign.text(), self.lineEdit_planningTime.text(), self.lineEdit_trafficFactor.text(), self.lineEdit_numShift.text(), self.lineEdit_chargingFactor.text(), self.lineEdit_dockTime.text())
+
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(200, 400)
@@ -60,6 +93,7 @@ class Ui_Dialog_advancedSettings(object):
         self.label_planningTime.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_planningTime.setObjectName("label_planningTime")
         self.gridLayout.addWidget(self.label_planningTime, 7, 0, 1, 1)
+
         self.lineEdit_numHours = QtWidgets.QLineEdit(Dialog)
         self.lineEdit_numHours.setObjectName("lineEdit_numHours")
         self.gridLayout.addWidget(self.lineEdit_numHours, 1, 2, 1, 1)
@@ -104,6 +138,8 @@ class Ui_Dialog_advancedSettings(object):
         self.label_numShift = QtWidgets.QLabel(Dialog)
         self.label_numShift.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_numShift.setObjectName("label_numShift")
+#         Dialog.setStyleSheet("color: rgb(255, 255, 255);\n"
+# "background-color: rgb(34,47,61);")
         self.gridLayout.addWidget(self.label_numShift, 0, 0, 1, 1)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.gridLayout.addItem(spacerItem, 0, 1, 1, 1)
@@ -124,13 +160,10 @@ class Ui_Dialog_advancedSettings(object):
 
         self.retranslateUi(Dialog)
         
-        self.buttonBox.accepted.connect(Dialog.accept)
-        self.buttonBox.accepted.connect(self.updateSettings)
-        # self.buttonBox.clicked.connect(self.updateSettings)
+        self.buttonBox.accepted.connect(self.inputInvalidHandle)
         self.buttonBox.rejected.connect(Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
-        # self.buttonBox.accepted.connect(Ui_Dialog_advancedSettings.readSettings(self.lineEdit_numHours.text(), self.lineEdit_robotSpeed.text(), self.lineEdit_numStopSign.text(), self.lineEdit_planningTime.text(), self.lineEdit_trafficFactor.text(), self.lineEdit_numShift.text(), self.lineEdit_chargingFactor.text(), self.lineEdit_dockTime.text()))
-        
+  
         Ui_Dialog_advancedSettings.readSettings(self.lineEdit_numHours.text(), self.lineEdit_robotSpeed.text(), self.lineEdit_numStopSign.text(), self.lineEdit_planningTime.text(), self.lineEdit_trafficFactor.text(), self.lineEdit_numShift.text(), self.lineEdit_chargingFactor.text(), self.lineEdit_dockTime.text())
         
 
@@ -153,15 +186,7 @@ class Ui_Dialog_advancedSettings(object):
         self.lineEdit_chargingFactor.setText(_translate("Dialog", str(Ui_Dialog_advancedSettings.lineEdit_chargingFactor)))
         self.lineEdit_dockTime.setText(_translate("Dialog", str(Ui_Dialog_advancedSettings.lineEdit_dockTime)))
         self.label_numShift.setText(_translate("Dialog", "Shifts Per Day"))
-        # Ui_Dialog_advancedSettings.readSettings(self.lineEdit_numHours.text(), self.lineEdit_robotSpeed.text(), self.lineEdit_numStopSign.text(), self.lineEdit_planningTime.text(), self.lineEdit_trafficFactor.text(), self.lineEdit_numShift.text(), self.lineEdit_chargingFactor.text(), self.lineEdit_dockTime.text())
-#     lineEdit_numHours = 8
-#     lineEdit_robotSpeed = 0
-#     lineEdit_numStopSign = 0
-#     lineEdit_planningTime = 15
-#     lineEdit_trafficFactor = 0.8
-#     lineEdit_numShift = 3
-#     lineEdit_chargingFactor = 0.95
-#     lineEdit_dockTime = 60
+
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
